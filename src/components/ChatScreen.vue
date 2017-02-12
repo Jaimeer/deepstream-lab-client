@@ -1,0 +1,75 @@
+<template>
+  <div>
+    <template v-if="chatId">
+      <h2>Chat Screen</h2>
+      <div>{{chatId}}</div>
+      <div>
+        <div v-if="chatTexts.length > 0">
+          <div v-for="chatText in chatTexts">
+            {{ chatText }}
+          </div>
+        </div>
+        <div v-else>No Chats</div>
+        <div>
+          <input v-model="chatText">
+          <button @click="sendText">Send</button>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+  import {
+    client,
+    getUserId
+  } from '../deepStream/conn.js'
+
+  let chatTextData = null
+
+  export default {
+    name: 'chat-screen',
+    props: ['chatId'],
+    data() {
+      return {
+        chatText: '',
+        chatTexts: [],
+      }
+    },
+    watch: {
+      chatId(val) {
+        console.log('Changed chatId', val)
+        chatTextData = client.record.getList('chat/' + val);
+
+        chatTextData.subscribe(values => {
+          console.log('chatTextData', values)
+          this.chatTexts = values
+        })
+      }
+    },
+    created() {},
+    methods: {
+      sendText() {
+        console.log('sendText', this.chatText)
+        if (this.chatText) {
+          const newChatText = {
+            id: client.getUid(),
+            text: this.chatText,
+            chatId: this.chatId,
+            userId: getUserId()
+          }
+          const chatTextRecord = client.record.getRecord('chat-texts/' + newChatText.id)
+          chatTextRecord.whenReady(() => {
+            chatTextRecord.set(newChatText)
+            chatTextData.addEntry(newChatText.id)
+            this.chatText = ''
+          })
+        }
+      }
+    }
+  }
+
+</script>
+<style>
+
+
+</style>
