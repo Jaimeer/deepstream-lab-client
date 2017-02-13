@@ -24,8 +24,8 @@
   import ChatListItem from './ChatListItem'
   import ChatScreen from './ChatScreen'
   import {client} from '../deepStream/conn.js'
-  
-  let chatListData = client.record.getList('chats');
+
+  let chatListData = client.record.getList('chat-list/list');
 
   export default {
     name: 'chat-list',
@@ -54,7 +54,7 @@
             id: client.getUid(),
             name: this.chatName
           }
-          const chatRecord = client.record.getRecord('chat/' + newChat.id)
+          const chatRecord = client.record.getRecord('chat-item/' + newChat.id)
           chatRecord.whenReady(() => {
             chatRecord.set(newChat)
             chatListData.addEntry(newChat.id)

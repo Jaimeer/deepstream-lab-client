@@ -1,12 +1,9 @@
 <template>
   <div>
-    <template v-if="chat">
-      {{ chat.name }}
-      <button @click="removeChat">X</button>
-      <button @click="removeChatRpc">XR</button>
-      <button @click="loadChat">Load</button>
+    <template v-if="chatText">
+      {{ chatText.text }}
     </template>
-    <template v-else>{{ chatId }}</template>
+    <template v-else>{{ textId }}</template>
   </div>
 </template>
 <script>
@@ -15,24 +12,25 @@
   } from '../deepStream/conn.js'
 
   export default {
-    name: 'chat-list-item',
-    props: ['chatId'],
+    name: 'chat-screen-text',
+    props: ['textId'],
     data() {
       return {
-        chat: null,
-        chatConn: null
+        chatText: null,
+        chatTextConn: null
       }
     },
     created() {
-      console.log('chat-list-item', this.chatId)
-      this.chatConn = client.record.getRecord('chat-item/' + this.chatId)
-      this.chatConn.whenReady(() => {
-        this.chat = this.chatConn.get()
+      console.log('text-item', this.textId)
+      this.chatTextConn = client.record.getRecord('chat-item-text-item/' + this.textId)
+      this.chatTextConn.whenReady(() => {
+        this.chatText = this.chatTextConn.get()
       })
     },
     methods: {
+      /*
       removeChat() {
-        this.chatConn.delete()
+        this.chatTextConn.delete()
         this.$emit('removeChat', this.chatId)
       },
       removeChatRpc() {
@@ -45,6 +43,7 @@
       loadChat() {
         this.$emit('loadChat', this.chatId)
       }
+      */
     }
   }
 

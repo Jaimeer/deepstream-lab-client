@@ -6,7 +6,7 @@
       <div>
         <div v-if="chatTexts.length > 0">
           <div v-for="chatText in chatTexts">
-            {{ chatText }}
+            <chat-screen-text :textId="chatText"></chat-screen-text>
           </div>
         </div>
         <div v-else>No Chats</div>
@@ -23,12 +23,16 @@
     client,
     getUserId
   } from '../deepStream/conn.js'
+  import ChatScreenText from './ChatScreenText.vue'
 
-  let chatTextData = null
+  let chatTextData = client.record.getAnonymousRecord()
 
   export default {
     name: 'chat-screen',
     props: ['chatId'],
+    components: {
+      ChatScreenText
+    },
     data() {
       return {
         chatText: '',
@@ -38,7 +42,11 @@
     watch: {
       chatId(val) {
         console.log('Changed chatId', val)
-        chatTextData = client.record.getList('chat/' + val);
+        // chatTextData = client.record.getAnonymousRecord()
+        // client.record.getList('chat-item-text-list/' + val);
+
+        chatTextData.setName('chat-item-text-list/' + val)
+        // this.chatTexts = []
 
         chatTextData.subscribe(values => {
           console.log('chatTextData', values)
@@ -57,7 +65,7 @@
             chatId: this.chatId,
             userId: getUserId()
           }
-          const chatTextRecord = client.record.getRecord('chat-texts/' + newChatText.id)
+          const chatTextRecord = client.record.getRecord('chat-item-text-item/' + newChatText.id)
           chatTextRecord.whenReady(() => {
             chatTextRecord.set(newChatText)
             chatTextData.addEntry(newChatText.id)
