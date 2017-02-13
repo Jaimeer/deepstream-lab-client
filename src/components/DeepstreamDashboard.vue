@@ -8,6 +8,8 @@
     <user-connected></user-connected>
     <hr>
     <no-exist-rpc></no-exist-rpc>
+    <hr>
+    <emit-subscribe></emit-subscribe>
   </div>
 </template>
 <script>
@@ -15,6 +17,7 @@
   import UserConnected from './UserConnected'
   import ChatList from './ChatList'
   import shareText from './shareText'
+  import EmitSubscribe from './EmitSubscribe'
 
   export default {
     name: 'deepstream-dashboard',
@@ -22,7 +25,8 @@
       NoExistRpc,
       UserConnected,
       ChatList,
-      shareText
+      shareText,
+      EmitSubscribe
     }
   }
 </script>

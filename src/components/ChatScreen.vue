@@ -68,8 +68,10 @@
           const chatTextRecord = client.record.getRecord('chat-item-text-item/' + newChatText.id)
           chatTextRecord.whenReady(() => {
             chatTextRecord.set(newChatText)
-            chatTextData.addEntry(newChatText.id)
-            this.chatText = ''
+            const chatTextDataList = client.record.getList('chat-item-text-list/' + val).whenReady(() => {
+              chatTextDataList.addEntry(newChatText.id)
+              this.chatText = ''
+            })
           })
         }
       }
